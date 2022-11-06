@@ -1,0 +1,245 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://Models/Characters/Tux/Tux002C.glb" type="PackedScene" id=1]
+[ext_resource path="res://Placeholders/Player.gd" type="Script" id=2]
+[ext_resource path="res://Placeholders/SpringArm.gd" type="Script" id=3]
+[ext_resource path="res://Models/Characters/Tux/Animation/Idle.tres" type="Animation" id=4]
+[ext_resource path="res://Images/Characters/Icons/tux_icon.png" type="Texture" id=5]
+[ext_resource path="res://Images/Coins/Gold/coin-0.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Coins/Coins Counter.gd" type="Script" id=7]
+[ext_resource path="res://Assets/Coins/data_sounds_coin.wav" type="AudioStream" id=8]
+[ext_resource path="res://Assets/Tux/data_sounds_jump.wav" type="AudioStream" id=9]
+[ext_resource path="res://Assets/Fonts/SuperTux-Medium.ttf" type="DynamicFontData" id=10]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 1.20774
+height = 2.30896
+
+[sub_resource type="DynamicFont" id=15]
+size = 24
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+extra_spacing_char = 2
+font_data = ExtResource( 10 )
+
+[sub_resource type="Theme" id=16]
+default_font = SubResource( 15 )
+Label/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+Label/constants/shadow_offset_x = 2
+Label/constants/shadow_offset_y = 2
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform float value: hint_range(0, 100); // %
+uniform float thickness: hint_range(0, 100) = 30.; // % thickness
+uniform sampler2D fg: hint_albedo;
+uniform sampler2D bg: hint_black_albedo;
+uniform float offset: hint_range(0, 100); // %
+uniform float smoothing: hint_range(0, 100) = 5.;
+
+void fragment() {
+	vec2 point = UV - vec2(0.5);
+	float PI = 3.14159265358979323846;
+	float ang = (1. - atan(point.x, point.y) / PI) * 50. - offset;
+	if (ang < 0.)
+		ang += 100.;
+	float s = smoothing / 1000.;
+	float k = PI / 2. / s;
+	float r1 = .5 - thickness / 200.;
+	float r2 = .5;
+	float r = length(point);
+	float uy = (r2 - r) / (r2 - r1);
+	if (r > r2 || r < r1)
+		COLOR.a = 0.;
+	else {
+		if (ang <= value) 
+			COLOR = texture(fg, vec2(ang / 100., uy));
+		else
+			COLOR = texture(bg, vec2(ang / 100., uy));
+		if ((r2 - r) < s)
+			COLOR.a = sin((r2 - r) * k);
+		if ((r - r1) < s)
+			COLOR.a = sin((r - r1) * k);
+	}
+}"
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0 )
+colors = PoolColorArray( 0.0901961, 0.239216, 0.184314, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+width = 1
+
+[sub_resource type="Gradient" id=8]
+offsets = PoolRealArray( 0 )
+colors = PoolColorArray( 0.219608, 0.909804, 0.556863, 1 )
+
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 8 )
+width = 1
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 2 )
+shader_param/value = 50.0
+shader_param/thickness = 24.0
+shader_param/offset = null
+shader_param/smoothing = 6.0
+shader_param/fg = SubResource( 6 )
+shader_param/bg = SubResource( 4 )
+
+[sub_resource type="Shader" id=9]
+code = "shader_type canvas_item;
+
+uniform float value: hint_range(0, 100); // %
+uniform float thickness: hint_range(0, 100) = 30.; // % thickness
+uniform sampler2D fg: hint_albedo;
+uniform sampler2D bg: hint_black_albedo;
+uniform float offset: hint_range(0, 100); // %
+uniform float smoothing: hint_range(0, 100) = 5.;
+
+void fragment() {
+	vec2 point = UV - vec2(0.5);
+	float PI = 3.14159265358979323846;
+	float ang = (1. - atan(point.x, point.y) / PI) * 50. - offset;
+	if (ang < 0.)
+		ang += 100.;
+	float s = smoothing / 1000.;
+	float k = PI / 2. / s;
+	float r1 = .5 - thickness / 200.;
+	float r2 = .5;
+	float r = length(point);
+	float uy = (r2 - r) / (r2 - r1);
+	if (r > r2 || r < r1)
+		COLOR.a = 0.;
+	else {
+		if (ang <= value) 
+			COLOR = texture(fg, vec2(ang / 100., uy));
+		else
+			COLOR = texture(bg, vec2(ang / 100., uy));
+		if ((r2 - r) < s)
+			COLOR.a = sin((r2 - r) * k);
+		if ((r - r1) < s)
+			COLOR.a = sin((r - r1) * k);
+	}
+}"
+
+[sub_resource type="Gradient" id=10]
+offsets = PoolRealArray( 0 )
+colors = PoolColorArray( 0.0470588, 0.203922, 0.301961, 1 )
+
+[sub_resource type="GradientTexture" id=11]
+gradient = SubResource( 10 )
+width = 1
+
+[sub_resource type="Gradient" id=12]
+offsets = PoolRealArray( 0 )
+colors = PoolColorArray( 0.0666667, 0.443137, 0.92549, 1 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+width = 1
+
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 9 )
+shader_param/value = 75.0
+shader_param/thickness = 12.0
+shader_param/offset = 50.0
+shader_param/smoothing = 6.0
+shader_param/fg = SubResource( 13 )
+shader_param/bg = SubResource( 11 )
+
+[node name="KinematicBody" type="KinematicBody"]
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.648, 0 )
+shape = SubResource( 1 )
+
+[node name="Tux" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, -3, 0 )
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Tux"]
+anims/Idle = ExtResource( 4 )
+
+[node name="SpringArm" type="SpringArm" parent="."]
+transform = Transform( -1, 8.74228e-08, 0, 8.74228e-08, 1, 8.74228e-08, 7.64274e-15, 8.74228e-08, -1, 0, 0, -2 )
+spring_length = 9.0
+margin = 0.1
+script = ExtResource( 3 )
+
+[node name="Camera" type="Camera" parent="SpringArm"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9 )
+near = 0.02
+
+[node name="Coin UI" type="Control" parent="."]
+margin_left = -1.0
+margin_right = 39.0
+margin_bottom = 40.0
+
+[node name="Node" type="Node" parent="Coin UI"]
+script = ExtResource( 7 )
+
+[node name="Icon" type="Sprite" parent="Coin UI/Node"]
+position = Vector2( 49, 48 )
+texture = ExtResource( 6 )
+
+[node name="Counter" type="Label" parent="Coin UI/Node/Icon"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 14.0
+margin_top = -36.5
+margin_right = 76.0
+margin_bottom = 4.5
+theme = SubResource( 16 )
+text = "0"
+valign = 1
+
+[node name="Tux2" type="Control" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -40.0
+margin_right = 40.0
+
+[node name="Icon" type="Sprite" parent="Tux2"]
+position = Vector2( 90.25, -42.75 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 5 )
+
+[node name="Health" type="Panel" parent="Tux2/Icon"]
+material = SubResource( 7 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -161.0
+margin_top = -161.0
+margin_right = 33.0
+margin_bottom = 33.0
+
+[node name="Oxygen" type="Panel" parent="Tux2/Icon/Health"]
+visible = false
+material = SubResource( 14 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -108.5
+margin_top = -108.5
+margin_right = 108.5
+margin_bottom = 108.5
+
+[node name="CoinSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 8 )
+unit_db = 18.0
+unit_size = 1.5
+max_db = 6.0
+
+[node name="JumpSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 9 )
+unit_db = 18.0
+max_db = 6.0
