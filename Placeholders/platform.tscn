@@ -1,0 +1,105 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/Toon/Outline.tres" type="Material" id=1]
+
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="CubeMesh" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+next_pass = ExtResource( 1 )
+params_diffuse_mode = 4
+params_specular_mode = 1
+albedo_color = Color( 0.2, 0.282353, 0.376471, 1 )
+
+[sub_resource type="SpatialMaterial" id=4]
+next_pass = ExtResource( 1 )
+params_diffuse_mode = 4
+params_specular_mode = 1
+albedo_color = Color( 0.52549, 0.662745, 0.968627, 1 )
+
+[node name="RigidBody" type="RigidBody"]
+collision_layer = 2
+collision_mask = 3
+mass = 2.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 4, 0, 0, 0, 0.25, 0, 0, 0, 2.352, 0, 0.25, -2 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="CollisionShape1" type="CollisionShape" parent="."]
+transform = Transform( 6.72, 0, 0, 0, 0.25, 0, 0, 0, 2.688, 0, 0.25, -7 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape1"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="CollisionShape4" type="CollisionShape" parent="."]
+transform = Transform( 6.72, 0, 0, 0, 1, 0, 0, 0, 0.4, 0, 1.25, -10 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape4"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape9" type="CollisionShape" parent="."]
+transform = Transform( 4.032, 0, 0, 0, 1, 0, 0, 0, 0.4, 0, 1.25, 0 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape9"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="."]
+transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 2.304, -4, 1.25, -2 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape2"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape3" type="CollisionShape" parent="."]
+transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 2.304, 4, 1.25, -2 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape3"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape5" type="CollisionShape" parent="."]
+transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 3.35462, -7, 1.25, -7 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape5"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape6" type="CollisionShape" parent="."]
+transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 3.35462, 7, 1.25, -7 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape6"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape7" type="CollisionShape" parent="."]
+transform = Transform( -1.74846e-08, 0, -1.6128, 0, 1, 0, 0.4, 0, -7.04977e-08, -6, 1.25, -4 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape7"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="CollisionShape8" type="CollisionShape" parent="."]
+transform = Transform( -1.74846e-08, 0, -1.6128, 0, 1, 0, 0.4, 0, -7.04977e-08, 6, 1.25, -4 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape8"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
