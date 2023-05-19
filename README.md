@@ -1,2 +1,2 @@
 # SuperTuxWorld
-Tux3D
+Prototype 3D SuperTux Game made in Godot 3.x
