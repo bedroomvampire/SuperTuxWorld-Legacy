@@ -1,4 +1,4 @@
-# Original code from rayuse rp, berryberryniceu and AiTechEye
+# Original code from rayuse rp, berryberryniceu, AiTechEye and  FinePointCGI
 
 extends KinematicBody
 
