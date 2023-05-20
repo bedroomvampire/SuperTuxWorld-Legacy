@@ -1,10 +1,10 @@
-# Original code from rayuse rp, berryberryniceu, AiTechEye and  FinePointCGI
+# Original code from rayuse rp, berryberryniceu and AiTechEye
 
 extends KinematicBody
 
 var max_speed = 0
 var movement = 0
-export var walk_speed = 16
+export var walk_speed = 14
 export var run_speed = 20;
 export var acceleration = 70
 export var friction = 60
@@ -13,7 +13,7 @@ export var gravity = -48
 export var jump_impulse = 24
 export var mouse_sensitivity = .2
 export var controller_sensitivity = 3
-export var rot_speed = 12
+export var rot_speed = 8
 export (int, 0, 10) var push = 1
 
 export (NodePath) var joystickRightPath
@@ -22,23 +22,33 @@ var velocity = Vector3.ZERO
 var snap_vector = Vector3.ZERO
 var picked_object
 var pull_power = 8
+var locked = false
 export var walk_pull_power = 9
 export var run_pull_power = 13
+export var rotation_power = 0.5
+export var throw_power = 12
 
 onready var spring_arm = $SpringArm
 onready var pivot = $Pivot
 onready var camera = $SpringArm/Camera
 onready var interaction = $Interaction
 onready var hand = $Pivot/Position3D
+onready var joint = $Pivot/Joint
+onready var staticbody = $Pivot/StaticBody
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 func _unhandled_input(event):	
-	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED and !locked:
 		rotate_y(deg2rad(-event.relative.x * mouse_sensitivity))
 		spring_arm.rotate_x(deg2rad(-event.relative.y * mouse_sensitivity))		
-	pass
+	
+	#if Input.is_action_pressed("rotate"):
+	#	locked = true
+	#	rotate_object(event)
+	#if Input.is_action_just_released("rotate"):
+	#	locked = false
 
 func _physics_process(delta):
 	var input_vector = get_input_vector()
@@ -79,11 +89,22 @@ func get_input_vector():
 	input_vector.z = Input.get_action_strength("backward") - Input.get_action_strength("forward")
 	return input_vector.normalized() if input_vector.length() > 1 else input_vector
 	
+func rotate_object(event):
+	var axis_vector = Vector2.ZERO
+	axis_vector.x = Input.get_action_strength("look_right") - Input.get_action_strength("look_left")
+	axis_vector.y = Input.get_action_strength("look_down") - Input.get_action_strength("look_up")
+	
+	if picked_object != null:
+		if event is InputEventMouseMotion:
+			staticbody.rotate_x(deg2rad(event.relative.y * rotation_power))
+			staticbody.rotate_y(deg2rad(event.relative.x * rotation_power))
+		if InputEventJoypadMotion:
+			staticbody.rotate_x(deg2rad(axis_vector.y) * controller_sensitivity)
+			staticbody.rotate_y(deg2rad(axis_vector.x) * controller_sensitivity)
 	
 func get_direction(input_vector):
 	var direction = (input_vector.x * transform.basis.x) + (input_vector.z * transform.basis.z)
 	return direction
-	
 	
 func apply_movement(input_vector, direction, delta):
 	if direction != Vector3.ZERO:
@@ -123,18 +144,15 @@ func apply_controller_rotation():
 	axis_vector.x = Input.get_action_strength("look_right") - Input.get_action_strength("look_left")
 	axis_vector.y = Input.get_action_strength("look_down") - Input.get_action_strength("look_up")
 	
-	if InputEventJoypadMotion:
+	if InputEventJoypadMotion and !locked:
 		rotate_y(deg2rad(-axis_vector.x) * controller_sensitivity)
 		spring_arm.rotate_x(deg2rad(-axis_vector.y) * controller_sensitivity)
-		
 		
 func _on_fov_updated(value):
 	camera.fov = value
 	
-	
 func _on_mouse_sens_updated(value):
 	mouse_sensitivity = value
-		
 	
 func _process(_delta: float) -> void:
 	if Input.is_action_pressed("sprint"):
@@ -150,10 +168,21 @@ func _process(_delta: float) -> void:
 		for body in interaction.get_overlapping_bodies():
 			if body is RigidBody and picked_object == null:
 				picked_object = body
+				joint.set_node_b(picked_object.get_path())
 				return
 			elif picked_object != null:
 				picked_object = null
+				joint.set_node_b(joint.get_path())
 				return
+		
+	if Input.is_action_just_pressed("throw"):
+		if picked_object != null:
+			var knockback = picked_object.translation - translation
+			picked_object.apply_central_impulse(knockback * throw_power)
+			picked_object = null
+			joint.set_node_b(joint.get_path())
+			return
+		
 
 func _on_Coin_coin_sound():
 	$CoinSound.play()

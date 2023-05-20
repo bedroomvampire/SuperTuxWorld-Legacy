@@ -527,6 +527,16 @@ anims/Walk = SubResource( 19 )
 [node name="Position3D" type="Position3D" parent="Pivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.648, -4.5 )
 
+[node name="Joint" type="Generic6DOFJoint" parent="Pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.648, 0 )
+nodes/node_a = NodePath("../StaticBody")
+linear_limit_x/enabled = false
+linear_limit_y/enabled = false
+linear_limit_z/enabled = false
+
+[node name="StaticBody" type="StaticBody" parent="Pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.648, -4.5 )
+
 [node name="SpringArm" type="SpringArm" parent="."]
 spring_length = 9.0
 margin = 0.1
@@ -544,7 +554,7 @@ margin_bottom = 40.0
 [node name="Node" type="Node" parent="Coin"]
 
 [node name="Icon" type="Sprite" parent="Coin/Node"]
-position = Vector2( 48, 48 )
+position = Vector2( 193, 60 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 
@@ -567,14 +577,12 @@ __meta__ = {
 }
 
 [node name="Tux2" type="Control" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -40.0
 margin_right = 40.0
+margin_bottom = 40.0
 
 [node name="Icon" type="Sprite" parent="Tux2"]
-position = Vector2( 90.25, -42.75 )
-scale = Vector2( 0.6, 0.6 )
+position = Vector2( 95, 88 )
+scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 5 )
 
 [node name="Health" type="Panel" parent="Tux2/Icon"]
@@ -583,10 +591,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -161.0
-margin_top = -161.0
-margin_right = 33.0
-margin_bottom = 33.0
+margin_left = -179.0
+margin_top = -179.0
+margin_right = 15.0
+margin_bottom = 15.0
+rect_scale = Vector2( 1.2, 1.2 )
 
 [node name="Oxygen" type="Panel" parent="Tux2/Icon/Health"]
 visible = false
