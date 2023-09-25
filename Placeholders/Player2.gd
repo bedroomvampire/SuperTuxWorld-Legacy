@@ -2,15 +2,18 @@
 
 extends KinematicBody
 
+signal killed()
+
 var max_speed = 0
 var movement = 0
+onready var coins = $Coin/Node/Icon/Counter
 export var walk_speed = 14
 export var run_speed = 20;
 export var acceleration = 70
 export var friction = 60
 export var air_friction = 10
 export var gravity = -48
-export var jump_impulse = 24
+export var jump_impulse = 28
 export var mouse_sensitivity = .2
 export var controller_sensitivity = 3
 export var rot_speed = 8
@@ -27,7 +30,9 @@ export var walk_pull_power = 9
 export var run_pull_power = 13
 export var rotation_power = 0.5
 export var throw_power = 12
+export (float) var max_health = 4
 
+onready var health = max_health setget _set_health
 onready var spring_arm = $SpringArm
 onready var pivot = $Pivot
 onready var camera = $SpringArm/Camera
@@ -35,6 +40,8 @@ onready var interaction = $Interaction
 onready var hand = $Pivot/Position3D
 onready var joint = $Pivot/Joint
 onready var staticbody = $Pivot/StaticBody
+
+onready var invul_timer = $InvulTimer
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -184,5 +191,25 @@ func _process(_delta: float) -> void:
 			return
 		
 
-func _on_Coin_coin_sound():
+func damage(amount):
+	if invul_timer.is_stopped():
+		invul_timer.start()
+		_set_health(health - amount)
+
+func kill():
+	pass
+
+func _set_health(value):
+	var prev_health = health
+	health = clamp(value, 0, max_health)
+	if health != prev_health:
+		emit_signal("health_updated",health)
+		if health == 0:
+			kill()
+			emit_signal("killed")
+
+
+func _on_Coin_coin_collected():
 	$CoinSound.play()
+	coins._collect()
+	coins._ready()

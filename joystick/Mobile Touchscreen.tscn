@@ -1,0 +1,111 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://joystick/virtual_joystick.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Fonts/SuperTux-Medium.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Images/Mobile/button.png" type="Texture" id=3]
+[ext_resource path="res://Images/Mobile/jump.png" type="Texture" id=4]
+[ext_resource path="res://Images/Mobile/button_press.png" type="Texture" id=5]
+
+[sub_resource type="DynamicFont" id=15]
+size = 24
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+extra_spacing_char = 2
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=16]
+default_font = SubResource( 15 )
+Label/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+Label/constants/shadow_offset_x = 2
+Label/constants/shadow_offset_y = 2
+
+[node name="Mobile Touchscreen" type="Node"]
+
+[node name="Movement" parent="." instance=ExtResource( 1 )]
+margin_left = 0.0
+margin_top = -300.0
+margin_right = 300.0
+margin_bottom = 0.0
+action_left = "left"
+action_right = "right"
+action_up = "forward"
+action_down = "backward"
+
+[node name="Camera" parent="." instance=ExtResource( 1 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -300.0
+margin_top = -300.0
+margin_right = 0.0
+margin_bottom = 0.0
+rect_pivot_offset = Vector2( 150, 150 )
+action_left = "look_left"
+action_right = "look_right"
+action_up = "look_up"
+action_down = "look_down"
+
+[node name="Jump" type="TouchScreenButton" parent="Camera"]
+position = Vector2( 149, -99 )
+scale = Vector2( 0.75, 0.75 )
+normal = ExtResource( 3 )
+pressed = ExtResource( 5 )
+action = "jump"
+visibility_mode = 1
+
+[node name="Sprite" type="Sprite" parent="Camera/Jump"]
+position = Vector2( 64, 64 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+
+[node name="Hold" type="TouchScreenButton" parent="Camera"]
+position = Vector2( -7, -73 )
+scale = Vector2( 0.75, 0.75 )
+normal = ExtResource( 3 )
+pressed = ExtResource( 5 )
+action = "hold"
+visibility_mode = 1
+
+[node name="Sprite" type="Sprite" parent="Camera/Hold"]
+visible = false
+position = Vector2( 64, 64 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+
+[node name="Key" type="Label" parent="Camera/Hold"]
+anchor_right = 0.475
+anchor_bottom = 0.5
+rect_scale = Vector2( 2.06, 1.95 )
+theme = SubResource( 16 )
+text = "F"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Throw" type="TouchScreenButton" parent="Camera"]
+position = Vector2( -99, 56 )
+scale = Vector2( 0.75, 0.75 )
+normal = ExtResource( 3 )
+pressed = ExtResource( 5 )
+action = "throw"
+visibility_mode = 1
+
+[node name="Sprite" type="Sprite" parent="Camera/Throw"]
+visible = false
+position = Vector2( 64, 64 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+
+[node name="Key2" type="Label" parent="Camera/Throw"]
+anchor_right = 0.475
+anchor_bottom = 0.5
+rect_scale = Vector2( 2.06, 1.95 )
+theme = SubResource( 16 )
+text = "Q"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}

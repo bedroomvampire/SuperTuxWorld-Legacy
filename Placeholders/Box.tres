@@ -1,11 +1,15 @@
-[gd_resource type="SpatialMaterial" load_steps=3 format=2]
+[gd_resource type="SpatialMaterial" load_steps=4 format=2]
 
 [ext_resource path="res://Assets/Toon/Outline.tres" type="Material" id=1]
 [ext_resource path="res://Assets/Textures/crate1_diffuse.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Textures/crate1_normal.png" type="Texture" id=3]
 
 [resource]
 next_pass = ExtResource( 1 )
 params_diffuse_mode = 4
-albedo_color = Color( 0.647059, 0.517647, 0.517647, 1 )
+albedo_color = Color( 0.815686, 0.745098, 0.552941, 1 )
 albedo_texture = ExtResource( 2 )
+normal_enabled = true
+normal_scale = 0.75
+normal_texture = ExtResource( 3 )
 uv1_scale = Vector3( 3, 2, 2 )
